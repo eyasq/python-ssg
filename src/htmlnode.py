@@ -53,10 +53,12 @@ class ParentNode(HTMLNode):
     def to_html(self):
         if not self.tag:
             raise ValueError("Tag cannot be empty for a parent node.")
+        if self.children is None:
+            raise ValueError("Child nodes must have values")
         for child in self.children:
             if child.value is None and not isinstance(child, ParentNode):
                 raise ValueError("Child nodes must have values")
         ret_str = ''
         for child in self.children:
-            ret_str+=' '+child.to_html()
+            ret_str+=''+child.to_html()
         return f"<{self.tag}>{ret_str}</{self.tag}>"

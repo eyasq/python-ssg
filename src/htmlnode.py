@@ -1,5 +1,4 @@
 
-
 class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
@@ -62,3 +61,5 @@ class ParentNode(HTMLNode):
         for child in self.children:
             ret_str+=''+child.to_html()
         return f"<{self.tag}>{ret_str}</{self.tag}>"
+
+

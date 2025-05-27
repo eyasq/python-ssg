@@ -22,6 +22,18 @@ class Test_split_delimiter(unittest.TestCase):
         node = TextNode("This is text with an invalid _md syntax", TextType.TEXT)
         with self.assertRaises(Exception):
             split_nodes_delimiter([node], '_', TextType.ITALIC)
+    
+    def test_multiple_delimiters(self):
+        node = TextNode("This is `code` and `more` code", TextType.TEXT)
+        result = split_nodes_delimiter([node], '`', TextType.CODE)
+        expected = [
+            TextNode('This is ', TextType.TEXT),
+            TextNode('code', TextType.CODE),
+            TextNode(' and ', TextType.TEXT),
+            TextNode('more', TextType.CODE),
+            TextNode(' code', TextType.TEXT)
+        ]
+        assert result == expected
 
 if __name__ == '__main__':
     unittest.main()

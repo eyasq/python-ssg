@@ -23,3 +23,6 @@ def extract_markdown_links(text):
     for i in range(len(link_text)):
         tuples_list.append((link_text[i], link[i]))
     return tuples_list
+
+text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+print(extract_markdown_links(text))

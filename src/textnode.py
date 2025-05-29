@@ -52,7 +52,7 @@ def text_node_to_html_node(textnode):
     elif textnode.text_type == TextType.ITALIC:
         return LeafNode(value=textnode.text, tag='i')
     elif textnode.text_type == TextType.CODE:
-        return LeafNode(value=textnode.text, tag='`')
+        return LeafNode(value=textnode.text, tag='code')
     elif textnode.text_type == TextType.LINK:
         return LeafNode(value=textnode.text, tag='a', props={"href": f"{textnode.url}"})
     elif textnode.text_type == TextType.IMAGE:

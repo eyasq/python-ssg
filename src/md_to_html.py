@@ -78,6 +78,10 @@ def code_to_html_node(block):
     
     # For code blocks, we don't parse inline markdown
     code_node = LeafNode(code_text, "code")
+    print("Code block raw:", repr(block))
+    print("Code lines:", repr(code_lines))
+    print("Final code text:", repr(code_text))
+
     return ParentNode("pre", [code_node])
 
 def quote_to_html_node(block):

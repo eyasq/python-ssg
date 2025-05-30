@@ -57,4 +57,6 @@ def text_node_to_html_node(textnode):
         return LeafNode(value=textnode.text, tag='a', props={"href": f"{textnode.url}"})
     elif textnode.text_type == TextType.IMAGE:
         return LeafNode(value='', tag='img', props={"src": f"{textnode.url}", "alt":f"{textnode.alt}"})
+    if not textnode.text:
+        print("⚠️ Empty text_node found:", textnode)
     

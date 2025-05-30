@@ -1,4 +1,5 @@
 from textnode import TextNode, TextType
+from serve_webpage import generate_page, generate_pages_recursive
 import os
 import shutil
 print('hello world')
@@ -7,6 +8,7 @@ def main():
     txtnode = TextNode('This is some anchor text', TextType.LINK, 'https://boot.dev')
     print(txtnode)
     recursive_copy('/home/eyas/workspace/projects/ssg/python-ssg/static','/home/eyas/workspace/projects/ssg/python-ssg/public' )
+    generate_pages_recursive('content/','template.html','public/')
 # def recursive_copy(src, dst):
 #     #path = '/home/eyas/workspace/projects/ssg/python-ssg/public'
 #     if os.path.exists(dst):

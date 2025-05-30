@@ -1,4 +1,3 @@
-
 class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
@@ -47,7 +46,6 @@ class LeafNode(HTMLNode):
         return f'<{self.tag} {props}>{self.value}</{self.tag}>'
 
 
-
 class ParentNode(HTMLNode):
     def __init__(self, tag, children, props=None):
         super().__init__( tag = tag, children = children, props=props)
@@ -64,5 +62,3 @@ class ParentNode(HTMLNode):
         for child in self.children:
             ret_str+=''+child.to_html()
         return f"<{self.tag}>{ret_str}</{self.tag}>"
-
-

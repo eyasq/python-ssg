@@ -1,5 +1,6 @@
 from enum import Enum
 from htmlnode import LeafNode
+
 class TextType(Enum):
     TEXT = "text"
     BOLD = "bold"
@@ -42,7 +43,7 @@ class TextNode:
         return f"TextNode('{self.text}', {self.text_type}, {self.url})"
 
 
-def text_node_to_html_node(textnode):
+def text_node_to_html_node(textnode, basepath=None):
     if not isinstance(textnode, TextNode):
         raise Exception("Not a valid textnode.")
     if textnode.text_type == TextType.TEXT:
@@ -54,9 +55,13 @@ def text_node_to_html_node(textnode):
     elif textnode.text_type == TextType.CODE:
         return LeafNode(value=textnode.text, tag='code')
     elif textnode.text_type == TextType.LINK:
-        return LeafNode(value=textnode.text, tag='a', props={"href": f"{textnode.url}"})
+        # Fixed: Handle basepath properly for links
+        if basepath and basepath != '/':
+            href = f"{basepath.rstrip('/')}/{textnode.url.lstrip('/')}"
+        else:
+            href = textnode.url
+        return LeafNode(value=textnode.text, tag='a', props={"href": href})
     elif textnode.text_type == TextType.IMAGE:
         return LeafNode(value='', tag='img', props={"src": f"{textnode.url}", "alt":f"{textnode.alt}"})
     if not textnode.text:
         print("⚠️ Empty text_node found:", textnode)
-    

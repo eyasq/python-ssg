@@ -2,29 +2,14 @@ from textnode import TextNode, TextType
 from serve_webpage import generate_page, generate_pages_recursive
 import os
 import shutil
-print('hello world')
-
+import sys
+basepath = sys.argv[1] if len(sys.argv) > 1 else '/'
 def main():
     txtnode = TextNode('This is some anchor text', TextType.LINK, 'https://boot.dev')
     print(txtnode)
     recursive_copy('/home/eyas/workspace/projects/ssg/python-ssg/static','/home/eyas/workspace/projects/ssg/python-ssg/public' )
-    generate_pages_recursive('content/','template.html','public/')
-# def recursive_copy(src, dst):
-#     #path = '/home/eyas/workspace/projects/ssg/python-ssg/public'
-#     if os.path.exists(dst):
-#         shutil.rmtree(dst)
-#     #now i must add a check - if public doesnt exist, create it, so i can copy files to it
-#     if not os.path.exists(dst):
-#         os.mkdir(dst)
-#     if os.path.exists(src):
-#         files_or_folders = os.listdir(src)
-#         for item in files_or_folders:
-#             item_path = os.path.join(src, item)
-#             dst_path = os.path.join(dst, item)
-#             if os.path.isfile(item_path):
-#                 shutil.copy(item_path, dst_path)
-#             else:
-#                 recursive_copy(item_path, dst_path)
+    generate_pages_recursive('content/','template.html','docs/', basepath)
+
 
 def copy_folder_structure(src, dst):
     files_to_copy = os.listdir(src)

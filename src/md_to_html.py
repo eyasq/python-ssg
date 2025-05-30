@@ -4,7 +4,7 @@ from split_delimiter import text_to_textnodes
 from md_blocks_to_nodes import markdown_to_blocks, block_to_block_type
 import re
 
-def markdown_to_html_node(markdown):
+def markdown_to_html_node(markdown, basepath):
     """Convert a full markdown document into a single parent HTMLNode."""
     blocks = markdown_to_blocks(markdown)
     html_nodes = []
@@ -13,42 +13,42 @@ def markdown_to_html_node(markdown):
         block_type = block_to_block_type(block)
         
         if block_type == BlockType.PARAGRAPH:
-            html_nodes.append(paragraph_to_html_node(block))
+            html_nodes.append(paragraph_to_html_node(block, basepath))
         elif block_type == BlockType.HEADING:
-            html_nodes.append(heading_to_html_node(block))
+            html_nodes.append(heading_to_html_node(block, basepath))  
         elif block_type == BlockType.CODE:
-            html_nodes.append(code_to_html_node(block))
+            html_nodes.append(code_to_html_node(block, basepath))  
         elif block_type == BlockType.QUOTE:
-            html_nodes.append(quote_to_html_node(block))
+            html_nodes.append(quote_to_html_node(block, basepath))  
         elif block_type == BlockType.ORDERED_LIST:
-            html_nodes.append(ordered_list_to_html_node(block))
+            html_nodes.append(ordered_list_to_html_node(block, basepath))  
         elif block_type == BlockType.UNORDERED_LIST:
-            html_nodes.append(unordered_list_to_html_node(block))
+            html_nodes.append(unordered_list_to_html_node(block, basepath))  
         else:
             raise Exception("Invalid Block Type!")
     
     # Return a single div containing all the block nodes
     return ParentNode("div", html_nodes)
 
-def text_to_children(text):
+def text_to_children(text,basepath):
     """Convert text with inline markdown to a list of HTMLNode children."""
     text_nodes = text_to_textnodes(text)
     html_nodes = []
     
     for text_node in text_nodes:
-        html_node = text_node_to_html_node(text_node)
+        html_node = text_node_to_html_node(text_node, basepath)
         html_nodes.append(html_node)
     
     return html_nodes
 
-def paragraph_to_html_node(block):
+def paragraph_to_html_node(block, basepath):
     """Convert a paragraph block to an HTMLNode."""
     # Replace newlines with spaces for paragraph text
     paragraph_text = block.replace('\n', ' ')
-    children = text_to_children(paragraph_text)
+    children = text_to_children(paragraph_text, basepath)
     return ParentNode("p", children)
 
-def heading_to_html_node(block):
+def heading_to_html_node(block, basepath):
     """Convert a heading block to an HTMLNode."""
     # Count the number of # characters
     level = 0
@@ -60,11 +60,11 @@ def heading_to_html_node(block):
     
     # Extract the heading text (everything after the # and space)
     heading_text = block[level:].strip()
-    children = text_to_children(heading_text)
+    children = text_to_children(heading_text,basepath)
     
     return ParentNode(f"h{level}", children)
 
-def code_to_html_node(block):
+def code_to_html_node(block,basepath):
     """Convert a code block to an HTMLNode."""
     # Remove the opening and closing ```
     lines = block.split('\n')
@@ -84,7 +84,7 @@ def code_to_html_node(block):
 
     return ParentNode("pre", [code_node])
 
-def quote_to_html_node(block):
+def quote_to_html_node(block,basepath):
     """Convert a quote block to an HTMLNode."""
     # Remove the > from each line
     lines = block.split('\n')
@@ -97,11 +97,11 @@ def quote_to_html_node(block):
             quote_lines.append(line)
     
     quote_text = '\n'.join(quote_lines)
-    children = text_to_children(quote_text)
+    children = text_to_children(quote_text, basepath)
     
     return ParentNode("blockquote", children)
 
-def unordered_list_to_html_node(block):
+def unordered_list_to_html_node(block,basepath):
     """Convert an unordered list block to an HTMLNode."""
     lines = block.split('\n')
     list_items = []
@@ -110,12 +110,12 @@ def unordered_list_to_html_node(block):
         # Remove the - and space from the beginning
         if line.startswith('- '):
             item_text = line[2:]
-            children = text_to_children(item_text)
+            children = text_to_children(item_text, basepath)
             list_items.append(ParentNode("li", children))
     
     return ParentNode("ul", list_items)
 
-def ordered_list_to_html_node(block):
+def ordered_list_to_html_node(block,basepath):
     """Convert an ordered list block to an HTMLNode."""
     lines = block.split('\n')
     list_items = []
@@ -125,7 +125,7 @@ def ordered_list_to_html_node(block):
         match = re.match(r'^\d+\.\s', line)
         if match:
             item_text = line[match.end():]
-            children = text_to_children(item_text)
+            children = text_to_children(item_text,basepath)
             list_items.append(ParentNode("li", children))
     
     return ParentNode("ol", list_items)

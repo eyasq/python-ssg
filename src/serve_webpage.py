@@ -11,7 +11,7 @@ def extract_title(md):
             return (stripped_line[2:].strip())
     raise Exception("No H1 header found in markdown file.")
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path) as f:
         md_from_contents = f.read()
@@ -25,7 +25,7 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "w") as f:
         f.write(filled_final_template)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, root_dir_path_content = None):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath, root_dir_path_content = None):
     print(f"Generating page from {dir_path_content} to {dest_dir_path} using {template_path}")
     if root_dir_path_content is None:
         root_dir_path_content = dir_path_content
@@ -38,7 +38,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, roo
                 with open(template_path) as f:
                     template_content = f.read()
                 title = extract_title(md_from_contents)
-                content = (markdown_to_html_node(md_from_contents)).to_html()
+                content = (markdown_to_html_node(md_from_contents, basepath)).to_html()
                 replaced_title_template = template_content.replace('{{ Title }}', title)
                 filled_final_template = replaced_title_template.replace('{{ Content }}', content)
                 full_input_path = os.path.join(dir_path_content, file)
@@ -50,7 +50,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, roo
                 with open(output_path, "w") as f:
                     f.write(filled_final_template)
         else:
-            generate_pages_recursive(os.path.join(dir_path_content, file), template_path, dest_dir_path, root_dir_path_content)
+            generate_pages_recursive(os.path.join(dir_path_content, file), template_path, dest_dir_path, basepath, root_dir_path_content=root_dir_path_content)
 
 
 
